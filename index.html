@@ -1,0 +1,35 @@
+<html>
+<head>
+	<title>Ervian's Chat</title>
+</head>
+<body>
+<h3>chat</h3>
+<div id="chat"></div>
+<form id="chat-form">
+	<input id="message" size="32" />
+	<input type="submit" value="wyślij"/>
+</form>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	jQuery(function($){
+		var socket = io.connect();
+		var $form = $('#chat-form');
+		var $message = $('#message');
+		var $chat = $('#chat');
+		
+		$form.submit(function(e){
+			e.preventDefault();
+			socket.emit('sendMessage',$message.val());
+			$message.val('');
+		});
+		
+		socket.on('newMessage', function(data){
+			$chat.append('<p>'+data.msg+'</p>');
+			//console.log(data.msg);
+		});
+	});
+</script>
+</body>
+</html>
